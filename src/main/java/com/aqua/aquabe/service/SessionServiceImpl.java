@@ -10,6 +10,7 @@ import com.aqua.aquabe.model.session.TempUserProfileVO;
 import com.aqua.aquabe.model.social.KakaoTokenVO;
 import com.aqua.aquabe.model.social.KakaoUserProfileVO;
 import com.aqua.aquabe.service.aws.AwsCognitoService;
+import com.aqua.aquabe.service.common.RedisSessionService;
 import com.aqua.aquabe.service.social.KakaoService;
 import lombok.RequiredArgsConstructor;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AuthenticationResultType;
@@ -24,9 +25,9 @@ public class SessionServiceImpl implements SessionService {
 
     private final RedisSessionService redisSessionService;
 
-    private final KakaoService kakaoService;
-
     private final AwsCognitoService cognitoService;
+
+    private final KakaoService kakaoService;
 
     @Value("${aws.cognito.secret-key}")
     private String secretKey;
@@ -92,8 +93,6 @@ public class SessionServiceImpl implements SessionService {
 
             SessionVO session = new SessionVO(member, cognitoLoginResult);
             redisSessionService.createSession(session);
-
-            // TODO: 미동의 최신약관 확인
 
         } else {
             response.setSuccessOrNot("N");

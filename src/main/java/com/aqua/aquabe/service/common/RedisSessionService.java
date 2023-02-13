@@ -1,4 +1,4 @@
-package com.aqua.aquabe.service;
+package com.aqua.aquabe.service.common;
 
 import com.aqua.aquabe.model.session.SessionVO;
 

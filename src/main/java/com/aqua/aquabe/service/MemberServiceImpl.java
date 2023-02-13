@@ -5,6 +5,8 @@ import com.aqua.aquabe.model.member.MemberProfileVO;
 import com.aqua.aquabe.model.member.MemberVO;
 import com.aqua.aquabe.model.session.SessionVO;
 import com.aqua.aquabe.service.aws.AwsCognitoService;
+import com.aqua.aquabe.service.common.RedisSessionService;
+
 import lombok.RequiredArgsConstructor;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AuthenticationResultType;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.UsernameExistsException;
