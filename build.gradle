@@ -1,0 +1,50 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.0.2'
+	id 'io.spring.dependency-management' version '1.1.0'
+    id 'org.flywaydb.flyway' version '6.5.5'
+}
+
+group = 'com.aqua'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.projectlombok:lombok:1.18.20'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	
+	//aws
+	implementation platform('software.amazon.awssdk:bom:2.15.0')
+	implementation 'software.amazon.awssdk:cognitoidentityprovider'
+
+	//redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	//db
+	runtimeOnly  'org.mariadb.jdbc:mariadb-java-client'
+
+	//flyway
+	implementation 'org.flywaydb:flyway-core'
+	implementation group: 'org.flywaydb.flyway-test-extensions', name: 'flyway-spring-test', version: '6.0.0'
+	implementation group: 'org.flywaydb', name: 'flyway-mysql', version: '9.15.0'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+flyway {
+    url = 'jdbc:mariadb://127.0.0.1:3306/aqua?useUnicode=yes&characterEncoding=UTF-8&createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Seoul'
+    locations = ['filesystem:./src/main/resources/db/migration']
+    user = 'root'
+    password = 'aqua8282'
+    schemas = ['aqua']
+    sqlMigrationSuffixes = ['.sql']
+    outOfOrder = true
+}

@@ -1,0 +1,21 @@
+CREATE TABLE `members` (
+    `member_id` INT NOT NULL AUTO_INCREMENT COMMENT '회원 ID',
+    `member_uuid` VARCHAR(36) NOT NULL COMMENT '회원고유식별아이디(Cognito ID)',
+    `nickname` VARCHAR(20) NOT NULL COMMENT '닉네임',
+    `email` VARCHAR(200) NOT NULL COMMENT 'Email',
+    `gender` VARCHAR(10) NULL COMMENT '성별',
+    `birthday` VARCHAR(8) NULL COMMENT '생일',
+    `state_code` VARCHAR(10) NOT NULL DEFAULT 'NORMAL' COMMENT '회원상태코드 NORMAL:정상, HALT:중지' DEFAULT 'NORMAL',
+    `role_code` VARCHAR(10) NOT NULL DEFAULT 'USER' COMMENT 'USER:일반사용자, ADMIN:관리자',
+    `social_code` VARCHAR(50) NOT NULL COMMENT '소셜플랫폼코드(KAKAO: 카카오)',
+    `social_id` VARCHAR(300) NOT NULL COMMENT '소셜아이디',
+    `refresh_token` TEXT COMMENT 'Refresh Token' ,
+    `profile_url` VARCHAR(200) NOT NULL DEFAULT '' COMMENT '프로필 사진 URL' ,
+    `client_key` VARCHAR(200) NULL COMMENT 'Client Key' ,
+    `created_id` INT NOT NULL COMMENT '최초생성자 ID',
+    `created_datetime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '최초생성일시',
+    `updated_id` INT NOT NULL COMMENT '최종수정자 ID',
+    `updated_datetime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '최종수정일시',
+    PRIMARY KEY (`member_id`),
+    KEY `idx_email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='회원';
