@@ -14,7 +14,10 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class KakaoUserProfileVO {
+
+    @JsonProperty("id")
     private String id;
+
     private String email;
     private String nickname;
     private String profileImageUrl;
@@ -25,13 +28,15 @@ public class KakaoUserProfileVO {
     @JsonProperty("kakao_account")
     private void unpackNested(final Map<String, Object> kakaoAccount) {
 
+        this.email = (String) kakaoAccount.getOrDefault("email", "");
+
         Map<String, Object> profile = (Map<String, Object>) kakaoAccount.getOrDefault("profile", null);
         if (profile != null) {
             this.nickname = (String) profile.getOrDefault("nickname", "");
             this.profileImageUrl = (String) profile.getOrDefault("profile_image_url", "");
             this.isDefaultImage = (boolean) profile.getOrDefault("is_default_image", false);
         }
-        this.email = (String) kakaoAccount.getOrDefault("email", "");
+
         this.birthday = (String) kakaoAccount.getOrDefault("birthday", "");
         this.gender = (String) kakaoAccount.getOrDefault("gender", "");
 

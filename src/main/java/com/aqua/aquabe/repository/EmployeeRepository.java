@@ -7,6 +7,6 @@ import com.aqua.aquabe.model.employee.Employee;
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
-    Employee findTopEmployeeByEmployeeNo(Long employeeNo);
+    Employee findTopEmployeeByEmployeeId(String employeeId);
 
 }

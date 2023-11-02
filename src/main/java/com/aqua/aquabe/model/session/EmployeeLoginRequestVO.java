@@ -12,5 +12,5 @@ public class EmployeeLoginRequestVO {
 
     private String employeeId;
 
-    private String LanguageCode;
+    private String languageCode;
 }

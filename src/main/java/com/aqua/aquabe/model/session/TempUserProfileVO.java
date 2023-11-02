@@ -11,6 +11,7 @@ public class TempUserProfileVO {
     private String socialPlatform;
     private String socialAccessToken;
 
+    private String socialId;
     private String email;
     private String nickname;
     private String profileImageUrl;
