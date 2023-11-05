@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aqua.aquabe.repository.ReservationRepository">
+
+    <select id="selectReservations" resultType="com.aqua.aquabe.model.reservation.ReservationResponseVO">
+        SELECT reservation_no
+              ,service_date
+              ,status
+              ,holder
+         FROM reservation
+    </select>
+
+    <update id="updateReservation">
+       UPDATE reservation
+          SET status = #{reservation.status}
+        WHERE reservation_no = #{reservation.reservationNo}
+    </update>
+
+    <update id="updateDisableReservation">
+       UPDATE reservation
+          SET status = 'DELETED'
+        WHERE reservation_no = #{reservationNo}
+    </update>
+
+    <insert id="insertReservation" useGeneratedKeys="true" keyProperty="reservationNo">
+        INSERT INTO reservation (
+            service_id
+           ,service_date
+        ) VALUE (
+            #{serviceId}
+           ,#{serviceDate}
+        )
+    </insert>
+
+    <insert id="insertReservationDetail">
+        INSERT INTO reservation_detail (
+            reservation_no
+           ,order_no
+        ) VALUE (
+            #{reservationNo}
+           ,#{orderNo}
+        )
+    </insert>    
+
+</mapper>
