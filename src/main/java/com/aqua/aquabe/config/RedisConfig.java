@@ -1,6 +1,6 @@
 package com.aqua.aquabe.config;
 
-import com.aqua.aquabe.model.session.SessionVO;
+import com.aqua.aquabe.model.session.MemberSessionVO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,10 +20,10 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 @RequiredArgsConstructor
 public class RedisConfig {
 
-    @Value("${redis.host}")
+    @Value("${spring.data.redis.host}")
     private String redisHost;
 
-    @Value("${redis.port}")
+    @Value("${spring.data.redis.port}")
     private int redisPort;
 
     @Bean
@@ -42,11 +42,11 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<String, SessionVO> redisSessionTemplate() {
-        RedisTemplate<String, SessionVO> redisTemplate = new RedisTemplate<>();
+    public RedisTemplate<String, MemberSessionVO> redisSessionTemplate() {
+        RedisTemplate<String, MemberSessionVO> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());
         redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(SessionVO.class));
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(MemberSessionVO.class));
         return redisTemplate;
     }
 

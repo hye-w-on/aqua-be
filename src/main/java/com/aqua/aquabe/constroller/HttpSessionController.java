@@ -49,7 +49,7 @@ public class HttpSessionController {
                 if (employeeSession != null) {
                         // 신규 세션 생성
                         HttpSession session = request.getSession();
-                        session.setAttribute(CommonConstants.HTTP_SESSION_KEY, employeeSession);
+                        session.setAttribute(CommonConstants.EMPLOYEE_HTTP_SESSION_KEY, employeeSession);
 
                         return new ResponseEntity<>(CommonResponseVO.<EmployeeSessionVO>builder()
                                         .successOrNot(CommonConstants.YES)
@@ -74,7 +74,7 @@ public class HttpSessionController {
                 // EmployeeSessionVO employeeSession){
 
                 EmployeeSessionVO employeeSession = (EmployeeSessionVO) session
-                                .getAttribute(CommonConstants.HTTP_SESSION_KEY);
+                                .getAttribute(CommonConstants.EMPLOYEE_HTTP_SESSION_KEY);
 
                 if (employeeSession != null) {
                         return new ResponseEntity<>(CommonResponseVO.<EmployeeSessionVO>builder()
@@ -93,18 +93,18 @@ public class HttpSessionController {
         @Operation(summary = "HttpSession Scope Check", description = "HttpSession Scope Check Test")
         @GetMapping("/scope")
         public void scopeCheck(
-                        @SessionAttribute(CommonConstants.HTTP_SESSION_KEY) EmployeeSessionVO employeeSession,
+                        @SessionAttribute(CommonConstants.EMPLOYEE_HTTP_SESSION_KEY) EmployeeSessionVO employeeSession,
                         HttpSession session,
                         HttpServletRequest request, HttpServletResponse response) {
 
                 log.info("@SessionAttribute: "
                                 + employeeSession);
                 log.info("HttpSession: "
-                                + session.getAttribute(CommonConstants.HTTP_SESSION_KEY));
+                                + session.getAttribute(CommonConstants.EMPLOYEE_HTTP_SESSION_KEY));
                 log.info("SessionScopeUtil: "
-                                + SessionScopeUtil.getAttribute(CommonConstants.HTTP_SESSION_KEY));
+                                + SessionScopeUtil.getAttribute(CommonConstants.EMPLOYEE_HTTP_SESSION_KEY));
                 log.info("RequestScopeUtil: "
-                                + RequestScopeUtil.getAttribute(CommonConstants.HTTP_SESSION_KEY));
+                                + RequestScopeUtil.getAttribute(CommonConstants.EMPLOYEE_HTTP_SESSION_KEY));
 
         }
 

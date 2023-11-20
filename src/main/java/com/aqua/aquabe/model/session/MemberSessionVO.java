@@ -21,15 +21,12 @@ import software.amazon.awssdk.services.cognitoidentityprovider.model.Authenticat
 public class MemberSessionVO {
     private String redisSessionId;
 
-    // private Long memberNo;
-
-    // private String accessToken;
-    // private String refreshToken;
-    // private String idToken;
+    private Long memberNo;
 
     // info
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String email;
+    private String languageCode;
     // private String nickname;
 
     // cognito
@@ -39,18 +36,25 @@ public class MemberSessionVO {
     private String cognitoAccessToken;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String cognitoRefreshToken;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private String cognitoIdToken;
 
     public MemberSessionVO(Member member) {
+        this.memberNo = member.getMemberNo();
+
         this.redisSessionId = new SimpleDateFormat("yyyyMMddHHmmss", Locale.KOREAN).format(new Date()) + ':'
                 + UUID.randomUUID();
     }
 
     public MemberSessionVO(Member member, AuthenticationResultType cognitoLoginResult) {
+        this.memberNo = member.getMemberNo();
+
         this.redisSessionId = new SimpleDateFormat("yyyyMMddHHmmss", Locale.KOREAN).format(new Date()) + ':'
                 + UUID.randomUUID();
 
         this.cognitoUuid = member.getCognitoUuid();
         this.cognitoAccessToken = cognitoLoginResult.accessToken();
         this.cognitoRefreshToken = cognitoLoginResult.refreshToken();
+        this.cognitoIdToken = cognitoLoginResult.idToken();
     }
 }

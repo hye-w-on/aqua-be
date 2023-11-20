@@ -41,6 +41,7 @@ public class MemberServiceImpl implements MemberService {
                 .build();
         memberRepository.save(member);
 
+        // TODO : set memberNo
         // 회원가입 후 로그인 처리, Redis Session 등록
         MemberSessionVO session = new MemberSessionVO(member);
         redisSessionService.createSession(session);
@@ -68,7 +69,7 @@ public class MemberServiceImpl implements MemberService {
             String cognitoUuid = awsCognitoService.signUp(memberProfile.getEmail(), password);
             // 현 시스템에서는 이메일을 로그인을 위한 속성으로 사용
 
-            // Cognito 로그인
+            // Cognito 로그인 : 로그인 결과로 cognito 토큰(accessToken, idToken, refreshToken)을 받는다
             AuthenticationResultType cognitoLoginResult = awsCognitoService.signIn(memberProfile.getEmail(),
                     password);
 
@@ -88,5 +89,6 @@ public class MemberServiceImpl implements MemberService {
             // TODO: 각종 예외시 코그니토 탈퇴
         }
 
+        // TODO : 응답으로는 idToken만 리턴한다.
     }
 }

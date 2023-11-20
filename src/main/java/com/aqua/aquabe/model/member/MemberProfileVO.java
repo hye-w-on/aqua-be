@@ -14,6 +14,7 @@ public class MemberProfileVO {
 
     private String socialPlatform;
     private String socialAccessToken;
+    private String socialId;
 
     private String email;
     private String password;

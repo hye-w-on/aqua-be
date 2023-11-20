@@ -25,12 +25,15 @@ public class EmployeeAuthInterceptor implements HandlerInterceptor {
         }
 
         HttpSession session = request.getSession();
-        EmployeeSessionVO employeeSession = (EmployeeSessionVO) session.getAttribute(CommonConstants.HTTP_SESSION_KEY);
+        EmployeeSessionVO employeeSession = (EmployeeSessionVO) session
+                .getAttribute(CommonConstants.EMPLOYEE_HTTP_SESSION_KEY);
+        String languageCode = request.getHeader("x-language-code");
 
         if (employeeSession == null) {
             throw new BusinessException(StatusCodeConstants.SESSION_EXPIRE);
         } else {
-            request.setAttribute(CommonConstants.HTTP_SESSION_KEY, employeeSession); // Request Scope
+            employeeSession.setLanguageCode(languageCode);
+            request.setAttribute(CommonConstants.EMPLOYEE_HTTP_SESSION_KEY, employeeSession); // Request Scope
 
             // TODO: 사용자가 요청 가능한 api인지 권한 조회
             // List<String> roleCodes = employeeSession.getRoleCodes();

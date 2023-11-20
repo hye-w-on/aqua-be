@@ -1,13 +1,12 @@
 package com.aqua.aquabe.service.common;
 
-import com.aqua.aquabe.model.session.SessionVO;
+import com.aqua.aquabe.model.session.MemberSessionVO;
 
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 
 import java.util.concurrent.TimeUnit;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
@@ -15,23 +14,21 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class RedisSessionService {
-    @Value(value = "${redis.session-ttl}")
-    private int redisSessionTtl;
 
-    private final RedisTemplate<String, SessionVO> redisSessionTemplate;
+    private final RedisTemplate<String, MemberSessionVO> redisSessionTemplate;
 
     @Resource(name = "redisSessionTemplate")
-    ValueOperations<String, SessionVO> valueOperations;
+    ValueOperations<String, MemberSessionVO> valueOperations;
 
-    public void createSession(SessionVO session) {
+    public void createSession(MemberSessionVO session) {
 
-        String key = session.getSessionId();
+        String key = session.getRedisSessionId();
         valueOperations.set(key, session);
 
-        redisSessionTemplate.expire(key, redisSessionTtl, TimeUnit.SECONDS);
+        redisSessionTemplate.expire(key, 1800, TimeUnit.SECONDS);
     }
 
-    public SessionVO getSession(String key) {
+    public MemberSessionVO getMemberSession(String key) {
         return valueOperations.get(key);
     }
 
