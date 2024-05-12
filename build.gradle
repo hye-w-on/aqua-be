@@ -12,12 +12,26 @@ sourceCompatibility = '17'
 repositories {
 	mavenCentral()
 }
+ext { //gradle 내에서 사용할 변수를 설정
+	set('springCloudVersion', "2022.0.3")
+}
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.projectlombok:lombok:1.18.20'
-
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	
+	//lombok
+	compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+	//validation
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	//swagger
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
 	
 	//aws
 	implementation platform('software.amazon.awssdk:bom:2.15.0')
@@ -33,6 +47,29 @@ dependencies {
 	implementation 'org.flywaydb:flyway-core'
 	implementation group: 'org.flywaydb.flyway-test-extensions', name: 'flyway-spring-test', version: '6.0.0'
 	implementation group: 'org.flywaydb', name: 'flyway-mysql', version: '9.15.0'
+
+	//mybatis
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.2'
+
+    //jpa 
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	//log
+	//implementation 'ch.qos.logback:logback-classic:1.4.11'
+	//implementation 'org.slf4j:slf4j-api:2.0.7'
+
+	//jwt
+	implementation 'io.jsonwebtoken:jjwt:0.12.3'
+
+	//spring cloud for openfeign
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.3'
+
+	//local cache
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
+
+	//ehcache
+	implementation 'org.ehcache:ehcache:3.10.8'
+	implementation 'javax.cache:cache-api:1.1.1'
 }
 
 tasks.named('test') {
