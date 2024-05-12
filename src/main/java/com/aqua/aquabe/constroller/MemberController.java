@@ -1,11 +1,11 @@
 package com.aqua.aquabe.constroller;
 
-import com.aqua.aquabe.constants.CommonConstants;
+import com.aqua.aquabe.constants.YnConstants;
 import com.aqua.aquabe.constants.StatusCodeConstants;
 import com.aqua.aquabe.model.common.CommonResponseVO;
 import com.aqua.aquabe.model.member.MemberProfileVO;
 import com.aqua.aquabe.model.session.MemberSessionVO;
-import com.aqua.aquabe.service.MemberService;
+import com.aqua.aquabe.service.member.MemberService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/v1/member", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/member", produces = MediaType.APPLICATION_JSON_VALUE)
 public class MemberController {
 
         private final MemberService memberService;
@@ -30,7 +30,7 @@ public class MemberController {
         public ResponseEntity<CommonResponseVO<MemberSessionVO>> signUp(@RequestBody MemberProfileVO memberProfile) {
 
                 return new ResponseEntity<>(CommonResponseVO.<MemberSessionVO>builder()
-                                .successOrNot(CommonConstants.YES)
+                                .successOrNot(YnConstants.Y)
                                 .statusCode(StatusCodeConstants.SUCCESS)
                                 .data(memberService.signUp(memberProfile))
                                 .build(), HttpStatus.OK);
@@ -43,7 +43,7 @@ public class MemberController {
                 memberService.cognitoSignUp(memberProfile);
 
                 return new ResponseEntity<>(CommonResponseVO.builder()
-                                .successOrNot(CommonConstants.YES)
+                                .successOrNot(YnConstants.Y)
                                 .statusCode(StatusCodeConstants.SUCCESS)
                                 .build(), HttpStatus.OK);
         }

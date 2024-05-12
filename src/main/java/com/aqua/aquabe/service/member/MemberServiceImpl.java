@@ -1,4 +1,4 @@
-package com.aqua.aquabe.service;
+package com.aqua.aquabe.service.member;
 
 import com.aqua.aquabe.model.member.Member;
 import com.aqua.aquabe.model.member.MemberProfileVO;

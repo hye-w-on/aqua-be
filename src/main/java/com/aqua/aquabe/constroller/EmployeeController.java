@@ -7,11 +7,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.aqua.aquabe.constants.CommonConstants;
+import com.aqua.aquabe.constants.YnConstants;
 import com.aqua.aquabe.constants.StatusCodeConstants;
 import com.aqua.aquabe.model.common.CommonResponseVO;
 import com.aqua.aquabe.model.employee.Employee;
-import com.aqua.aquabe.service.admin.EmployeeService;
+import com.aqua.aquabe.service.management.EmployeeService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "Employee")
-@RequestMapping(value = "/v1/employees")
+@RequestMapping(value = "/employees")
 public class EmployeeController {
     private final EmployeeService employeeService;
 
@@ -28,7 +28,7 @@ public class EmployeeController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CommonResponseVO<List<Employee>>> getEmployees() {
         return new ResponseEntity<>(CommonResponseVO.<List<Employee>>builder()
-                .successOrNot(CommonConstants.YES)
+                .successOrNot(YnConstants.Y)
                 .statusCode(StatusCodeConstants.SUCCESS)
                 .data(employeeService.getEmployees())
                 .build(), HttpStatus.OK);
@@ -39,7 +39,7 @@ public class EmployeeController {
     public ResponseEntity<CommonResponseVO<Integer>> createEmployee(
             @RequestBody Employee employee) {
         return new ResponseEntity<>(CommonResponseVO.<Integer>builder()
-                .successOrNot(CommonConstants.YES)
+                .successOrNot(YnConstants.Y)
                 .statusCode(StatusCodeConstants.SUCCESS)
                 .data(employeeService.createEmployee(employee))
                 .build(), HttpStatus.OK);

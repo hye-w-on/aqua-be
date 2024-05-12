@@ -3,9 +3,11 @@ package com.aqua.aquabe.service.sample;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.aqua.aquabe.model.employee.Employee;
+import com.aqua.aquabe.repository.BbsPostRepository;
 import com.aqua.aquabe.repository.EmployeeRepository;
 
 import java.sql.SQLException;
@@ -21,6 +23,9 @@ public class ExceptionTestServiceImpl implements ExceptionTestService {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private final EmployeeRepository employeeRepository;
+
+    // test
+    private final BbsPostRepository bbsPostRepository;
 
     @Override
     public void callCheckedSQLException() throws SQLException {
@@ -183,4 +188,18 @@ public class ExceptionTestServiceImpl implements ExceptionTestService {
         // throw new RuntimeException();
     }
 
+    // TODO: 테스트용 삭제
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = { Exception.class })
+    public void callTrn() {
+        bbsPostRepository.updateDisableBbsPost("1");
+    }
+
+    @Override
+    @Transactional(rollbackFor = { Exception.class })
+    public void callTrn2() {
+        callTrn();
+        System.out.println("----result:" + bbsPostRepository.selectBbsPost(1));
+
+    }
 }

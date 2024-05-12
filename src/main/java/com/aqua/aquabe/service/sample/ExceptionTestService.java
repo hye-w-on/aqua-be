@@ -29,4 +29,7 @@ public interface ExceptionTestService {
 
     void callExceptionPropagationAndRollback3() throws SQLException;
 
+    void callTrn();
+
+    void callTrn2();
 }

@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "Sample")
+@Tag(name = "Exception Sample")
 @Validated
 public class ExceptionTestController {
     private final ExceptionTestService exceptionTestService;
@@ -81,6 +81,17 @@ public class ExceptionTestController {
 
         try {
             exceptionTestService.callExceptionPropagationAndRollback1();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Operation(summary = "trnasition", description = "trnasition")
+    @GetMapping(value = "/v1/sample/rollback/exception-propagation-1", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void callTrnasition() {
+
+        try {
+            exceptionTestService.callTrn2();
         } catch (Exception e) {
             e.printStackTrace();
         }

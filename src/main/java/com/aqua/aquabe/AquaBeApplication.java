@@ -8,6 +8,7 @@ public class AquaBeApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(AquaBeApplication.class, args);
-	}
 
+
+	}
 }

@@ -4,7 +4,7 @@ import com.aqua.aquabe.model.common.CommonResponseVO;
 import com.aqua.aquabe.model.common.FileVO;
 
 import com.aqua.aquabe.model.session.SocialLoginRequestVO;
-import com.aqua.aquabe.service.SessionService;
+import com.aqua.aquabe.service.session.SessionService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ import java.security.NoSuchAlgorithmException;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/session")
+@RequestMapping("/session")
 public class SessionController {
 
         private final SessionService sessionService;

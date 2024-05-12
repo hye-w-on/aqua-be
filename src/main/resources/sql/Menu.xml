@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aqua.aquabe.repository.MenuRepository">
+
+    <select id="selectMenuList" resultType="MenuManagementVO">
+        WITH RECURSIVE cte AS (
+                SELECT menu_no
+                        ,menu_name
+                        ,menu_path
+                        ,parent_menu_no
+                        ,sort_order
+                        ,1 AS level
+                        ,CAST(menu_no AS CHAR) AS no_path
+                        ,CAST(sort_order AS CHAR) AS sort_path
+                FROM menu
+                WHERE parent_menu_no = 0
+                UNION ALL
+                SELECT p.menu_no
+                        ,p.menu_name
+                        ,p.menu_path
+                        ,p.parent_menu_no
+                        ,p.sort_order
+                        ,1 + c.level AS level
+                        ,CONCAT( c.no_path ,'>', p.menu_no) AS no_path
+                        ,CONCAT( c.sort_path ,'-', p.sort_order) AS sort_path
+                FROM menu p
+                INNER JOIN cte c ON p.parent_menu_no = c.menu_no
+                )
+                SELECT menu_no
+                        ,menu_name
+                        ,menu_path
+                        ,parent_menu_no
+                        ,sort_order
+                        ,level
+                        ,no_path
+                        ,sort_path
+                FROM cte
+                ORDER BY sort_path
+    </select>
+
+</mapper>

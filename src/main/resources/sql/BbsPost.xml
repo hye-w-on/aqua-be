@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aqua.aquabe.repository.BbsPostRepository">
+
+    <select id="selectBbsPostsCount" resultType="int">
+        SELECT COUNT(1) AS TOTAL_COUNT
+          FROM BBS_POST
+         WHERE USE_YN = 'Y'
+    </select>
+
+    <select id="selectBbsPosts" resultType="com.aqua.aquabe.model.bbs.BbsPostResponseVO">
+        SELECT P.post_no
+              ,P.title
+              ,P.contents
+         FROM BBS_POST P
+        WHERE P.USE_YN = 'Y'
+        <if test="bbsCondition.pageSize != null">
+            LIMIT #{bbsCondition.pageSize}
+        </if>
+        <if test="bbsCondition.start != null">
+            OFFSET #{bbsCondition.start}
+        </if>
+    </select>
+
+    <update id="updateDisableBbsPost">
+       UPDATE BBS_POST
+          SET USE_YN = 'N'
+        WHERE POST_NO = #{postNo}
+    </update>
+
+    <select id="selectBbsPost" resultType="string">
+        SELECT USE_YN
+          FROM BBS_POST
+         WHERE POST_NO = #{postNo}
+    </select>
+
+</mapper>

@@ -1,4 +1,4 @@
-package com.aqua.aquabe.service.admin;
+package com.aqua.aquabe.service.management;
 
 import java.util.List;
 

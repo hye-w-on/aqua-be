@@ -1,11 +1,12 @@
 package com.aqua.aquabe.constroller;
 
+import com.aqua.aquabe.constants.YnConstants;
 import com.aqua.aquabe.constants.CommonConstants;
 import com.aqua.aquabe.constants.StatusCodeConstants;
 import com.aqua.aquabe.model.common.CommonResponseVO;
-import com.aqua.aquabe.model.session.EmployeeLoginRequestVO;
+import com.aqua.aquabe.model.session.EmployeeLoginRequestDto;
 import com.aqua.aquabe.model.session.EmployeeSessionVO;
-import com.aqua.aquabe.service.SessionService;
+import com.aqua.aquabe.service.session.SessionService;
 import com.aqua.aquabe.util.RequestScopeUtil;
 import com.aqua.aquabe.util.SessionScopeUtil;
 
@@ -31,7 +32,7 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/http-session")
+@RequestMapping("/http-session")
 public class HttpSessionController {
         private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -40,7 +41,7 @@ public class HttpSessionController {
         @Operation(summary = "HttpSession 로그인", description = "HttpSession을 이용한 Employee 로그인")
         @PostMapping("/employee")
         public ResponseEntity<CommonResponseVO<EmployeeSessionVO>> httpSessionlogin(
-                        @RequestBody EmployeeLoginRequestVO employeeLoginRequest,
+                        @RequestBody EmployeeLoginRequestDto employeeLoginRequest,
                         HttpServletRequest request, HttpServletResponse response) {
 
                 // 직원 조회, 유효성 검사 및 세션VO 생성
@@ -52,13 +53,13 @@ public class HttpSessionController {
                         session.setAttribute(CommonConstants.EMPLOYEE_HTTP_SESSION_KEY, employeeSession);
 
                         return new ResponseEntity<>(CommonResponseVO.<EmployeeSessionVO>builder()
-                                        .successOrNot(CommonConstants.YES)
+                                        .successOrNot(YnConstants.Y)
                                         .statusCode(StatusCodeConstants.SUCCESS)
                                         .data(employeeSession)
                                         .build(), OK);
                 } else {
                         return new ResponseEntity<>(CommonResponseVO.<EmployeeSessionVO>builder()
-                                        .successOrNot(CommonConstants.NO)
+                                        .successOrNot(YnConstants.N)
                                         .statusCode(StatusCodeConstants.USER_NOT_FOUND)
                                         .build(), UNAUTHORIZED);
                 }
@@ -78,13 +79,13 @@ public class HttpSessionController {
 
                 if (employeeSession != null) {
                         return new ResponseEntity<>(CommonResponseVO.<EmployeeSessionVO>builder()
-                                        .successOrNot(CommonConstants.YES)
+                                        .successOrNot(YnConstants.Y)
                                         .statusCode(StatusCodeConstants.SUCCESS)
                                         .data(employeeSession)
                                         .build(), OK);
                 } else {
                         return new ResponseEntity<>(CommonResponseVO.<EmployeeSessionVO>builder()
-                                        .successOrNot(CommonConstants.NO)
+                                        .successOrNot(YnConstants.N)
                                         .statusCode(StatusCodeConstants.SESSION_EXPIRE)
                                         .build(), UNAUTHORIZED);
                 }

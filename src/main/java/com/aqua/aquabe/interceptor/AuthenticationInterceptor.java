@@ -1,14 +1,16 @@
 package com.aqua.aquabe.interceptor;
 
-import com.aqua.aquabe.model.session.SessionVO;
-import com.aqua.aquabe.service.SessionService;
+import com.aqua.aquabe.constants.YnConstants;
+import com.aqua.aquabe.constants.CommonConstants;
+import com.aqua.aquabe.constants.StatusCodeConstants;
+import com.aqua.aquabe.exception.BusinessException;
+import com.aqua.aquabe.model.session.MemberSessionVO;
+import com.aqua.aquabe.service.common.RedisSessionService;
 import java.util.regex.Pattern;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
@@ -17,73 +19,52 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Component
 @RequiredArgsConstructor
 public class AuthenticationInterceptor implements HandlerInterceptor {
-    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     private static final String HTTP_METHOD_OPTIONS = "OPTIONS";
-    private static final String MESSAGE_SESSION_EXPIRED = "Session Expired";
 
-    private final SessionService sessionService;
+    private final RedisSessionService redisSessionService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
-        String sessionId = request.getHeader("x-session-id");
-        if (HTTP_METHOD_OPTIONS.equals(request.getMethod())) {
-            return true;
-        } else if (isExcludePattern(HttpMethod.valueOf(request.getMethod()), request.getRequestURI())) {
-            // 예외패턴이면
-            if (!ObjectUtils.isEmpty(sessionId)) {
-                // sessionId가 있는 경우, 토큰 검증
-                String authorization = request.getHeader("Authorization");
-                if (ObjectUtils.isEmpty(authorization)) {
-                    return true;
-                }
-
-                // 세션과 토큰이 사용가능한 경우
-                if (Pattern.matches("^Bearer .*", authorization)) {
-                    authorization = authorization.replaceAll("^Bearer( )*", "");
-                }
-                SessionVO sessionUser = sessionService.getSession(sessionId);
-                if (sessionUser != null && verifyIdToken(authorization, sessionUser.getEmail())) {
-                    // 새 세션 set
-                    // SessionScopeUtil.setContextSession(sessionUser);
-                }
-            }
+        if (HTTP_METHOD_OPTIONS.equals(request.getMethod())
+                || isExcludePattern(HttpMethod.valueOf(request.getMethod()), request.getRequestURI())) {
+            // 인증 예외패턴이면
             return true;
         } else {
-            // sessionId가 없는 경우
-            if (ObjectUtils.isEmpty(sessionId)) {
-                // throw new BusinessException("x-session-id is required",
-                // StatusCodeConstants.NOT_AUTHORIZED_EXCEPTION);
+            // redisSessionId가 없는 경우
+            String redisSessionId = request.getHeader("x-redis-session-id");
+            if (ObjectUtils.isEmpty(redisSessionId)) {
+                throw new BusinessException(
+                        StatusCodeConstants.NOT_AUTHORIZED, "x-redis-session-id is required");
             }
-
             // 토큰이 없는 경우
             String authorization = request.getHeader("Authorization");
             if (ObjectUtils.isEmpty(authorization)) {
-                // throw new BusinessException("authorization is required",
-                // StatusCodeConstants.NOT_AUTHORIZED_EXCEPTION);
+                throw new BusinessException(StatusCodeConstants.NOT_AUTHORIZED, "authorization is required");
             }
+            // redis에 redisSessionId로 사용자정보가 존재하지 않는 경우
+            MemberSessionVO memberSession = redisSessionService.getMemberSession(redisSessionId);
+            if (memberSession == null) {
 
-            // 세션이 유효하지 않는 경우
-            SessionVO sessionUser = sessionService.getSession(sessionId);
-            if (sessionUser == null) {
-                // throw new BusinessException(MESSAGE_SESSION_EXPIRED,
-                // StatusCodeConstants.SESSION_EXPIRE);
+                throw new BusinessException(StatusCodeConstants.SESSION_EXPIRE);
             }
-
             // 토큰이 유효하지 않는 경우
             if (Pattern.matches("^Bearer .*", authorization)) {
                 authorization = authorization.replaceAll("^Bearer( )*", "");
             }
-            if (!verifyIdToken(authorization, sessionUser.getEmail())) {
-                // throw new BusinessException("Unauthorized",
-                // StatusCodeConstants.NOT_AUTHORIZED_EXCEPTION);
+            if (!verifyIdToken(authorization, memberSession.getEmail())) {
+                throw new BusinessException(StatusCodeConstants.NOT_AUTHORIZED, "Unauthorized");
             }
 
-            // 새 세션 set
-            // SessionScopeUtil.setContextSession(sessionUser);
+            // requestScope에 사용자정보 저장
+            String languageCode = request.getHeader("x-language-code");
+            memberSession.setLanguageCode(languageCode);
+            request.setAttribute(CommonConstants.MEMBER_HTTP_SESSION_KEY, memberSession);
+
             return true;
         }
+
     }
 
     public boolean verifyIdToken(String idToken, String email) {

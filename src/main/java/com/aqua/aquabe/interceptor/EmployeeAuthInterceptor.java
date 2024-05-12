@@ -1,5 +1,6 @@
 package com.aqua.aquabe.interceptor;
 
+import com.aqua.aquabe.constants.YnConstants;
 import com.aqua.aquabe.constants.CommonConstants;
 import com.aqua.aquabe.constants.StatusCodeConstants;
 import com.aqua.aquabe.exception.BusinessException;

@@ -18,6 +18,8 @@ public class EmployeeSessionVO {
 
     private String employeeId;
 
+    private String name;
+
     private String languageCode;
 
     // private List<String> roleCodes;
@@ -25,6 +27,8 @@ public class EmployeeSessionVO {
     public EmployeeSessionVO(Employee employee, String languageCode) {
         this.employeeNo = employee.getEmployeeNo();
         this.employeeId = employee.getEmployeeId();
+        this.name = employee.getName();
+
         this.languageCode = languageCode;
         // this.roleCodes = roleCodes;
     }
